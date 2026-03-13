@@ -24,6 +24,13 @@ analysis_on_x/
 ├── summary.py            # CLI: engagement-concentration report → <keyword>_summary.html
 ├── dankh_top10.py        # One-off hardcoded script (predecessor of top10.py)
 │
+├── timeline.py           # CLI: hourly engagement timeline → <keyword>_timeline.html
+├── heatmap.py            # CLI: tweet volume heatmap (hour × day) → <keyword>_heatmap.html
+├── wordcloud.py          # CLI: word frequency cloud → <keyword>_wordcloud.html
+├── pareto.py             # CLI: Pareto chart (likes per tweet + cumulative %) → <keyword>_pareto.html
+├── scatter.py            # CLI: likes vs retweets scatter plot → <keyword>_scatter.html
+├── bubbles.py            # CLI: author bubble chart → <keyword>_bubbles.html
+│
 ├── данх.csv              # Sample dataset — keyword "данх"
 ├── dankh.csv             # Same dataset with ASCII filename
 ├── данх.html             # Top 10 HTML output for данх
@@ -60,7 +67,31 @@ No token is ever written to disk or committed to source control.
 
 ---
 
-## Usage
+## Visualizations
+
+Each script takes any `<keyword>.csv` and produces a standalone dark-themed HTML file.
+
+```bash
+python timeline.py  данх.csv   # → данх_timeline.html
+python heatmap.py   данх.csv   # → данх_heatmap.html
+python wordcloud.py данх.csv   # → данх_wordcloud.html
+python pareto.py    данх.csv   # → данх_pareto.html
+python scatter.py   данх.csv   # → данх_scatter.html
+python bubbles.py   данх.csv   # → данх_bubbles.html
+```
+
+| Script | Chart | What it shows |
+|---|---|---|
+| `timeline.py` | Line / area | Tweet count, likes & retweets grouped by hour — shows when the topic exploded |
+| `heatmap.py` | CSS grid heatmap | Hour (0–23) × day-of-week — reveals daily conversation rhythm |
+| `wordcloud.py` | Word cloud | Most frequent words after stripping URLs, mentions and stopwords |
+| `pareto.py` | Bar + line combo | Per-tweet likes (bars) + cumulative % (line) — drives home engagement inequality |
+| `scatter.py` | Scatter plot | Each dot = one tweet (x = likes, y = retweets) — outliers expose viral or bot patterns |
+| `bubbles.py` | Bubble chart | Each bubble = one author (x = tweet count, y = total likes, size = likes) |
+
+All charts use Chart.js v4 (CDN) and wordcloud2.js (CDN) — no additional Python packages required beyond `pandas`.
+
+---
 
 ### 1 — Pull tweets
 

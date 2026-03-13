@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<title>Pareto · данх</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f1117; font-family: 'Segoe UI', sans-serif; padding: 28px; color: #d0d8e8; }
+  h1 { color: #fff; font-size: 18px; margin-bottom: 4px; letter-spacing: 0.5px; }
+  .subtitle { color: #556677; font-size: 12px; margin-bottom: 24px; }
+  .chart-wrap { background: #1a1d27; border: 1px solid #2a2d3a; border-radius: 10px; padding: 24px; }
+  .insight { margin-top: 16px; display: flex; gap: 16px; flex-wrap: wrap; }
+  .badge {
+    background: #1e2130; border: 1px solid #2a2d3a; border-radius: 6px;
+    padding: 8px 16px; font-size: 12px; color: #d0d8e8;
+  }
+  .badge span { color: #f91880; font-weight: 700; font-size: 14px; }
+  .footer { color: #445566; font-size: 11px; text-align: right; margin-top: 14px; }
+</style>
+</head>
+<body>
+  <h1>📊 Pareto Chart · данх</h1>
+  <div class="subtitle">Individual tweet likes (bars) vs. cumulative share of total engagement (line) — top 100 tweets by likes</div>
+  <div class="chart-wrap">
+    <canvas id="chart"></canvas>
+  </div>
+  <div class="insight" id="insights"></div>
+  <div class="footer">Byamba Enkhbat · data: X API</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const marks = {"50": 17, "80": 52};
+const labels = ["#1", "#2", "#3", "#4", "#5", "#6", "#7", "#8", "#9", "#10", "#11", "#12", "#13", "#14", "#15", "#16", "#17", "#18", "#19", "#20", "#21", "#22", "#23", "#24", "#25", "#26", "#27", "#28", "#29", "#30", "#31", "#32", "#33", "#34", "#35", "#36", "#37", "#38", "#39", "#40", "#41", "#42", "#43", "#44", "#45", "#46", "#47", "#48", "#49", "#50", "#51", "#52", "#53", "#54", "#55", "#56", "#57", "#58", "#59", "#60", "#61", "#62", "#63", "#64", "#65", "#66", "#67", "#68", "#69", "#70", "#71", "#72", "#73", "#74", "#75", "#76", "#77", "#78", "#79", "#80", "#81", "#82", "#83", "#84", "#85", "#86", "#87", "#88", "#89", "#90", "#91", "#92", "#93", "#94", "#95", "#96", "#97", "#98", "#99", "#100"];
+const ctx = document.getElementById('chart').getContext('2d');
+
+new Chart(ctx, {
+  data: {
+    labels,
+    datasets: [
+      {
+        type: 'bar',
+        label: '❤️ Likes',
+        data: [311, 249, 244, 219, 217, 208, 197, 189, 158, 149, 138, 133, 133, 133, 130, 121, 120, 116, 105, 89, 79, 78, 75, 70, 67, 62, 61, 61, 60, 59, 59, 57, 52, 50, 48, 47, 47, 46, 45, 41, 41, 40, 37, 35, 35, 34, 34, 34, 33, 33, 32, 32, 31, 31, 30, 26, 26, 25, 25, 23, 23, 23, 22, 21, 21, 20, 18, 17, 17, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 13, 13, 13, 12, 12, 12, 12, 12, 11, 11, 11, 11, 10, 10, 10, 10, 10, 9, 9],
+        backgroundColor: '#f9188044',
+        borderColor: '#f91880',
+        borderWidth: 1,
+        yAxisID: 'y',
+      },
+      {
+        type: 'line',
+        label: 'Cumulative %',
+        data: [5.01, 9.02, 12.95, 16.47, 19.97, 23.32, 26.49, 29.53, 32.08, 34.48, 36.7, 38.84, 40.98, 43.12, 45.22, 47.17, 49.1, 50.97, 52.66, 54.09, 55.36, 56.62, 57.83, 58.95, 60.03, 61.03, 62.01, 63.0, 63.96, 64.91, 65.86, 66.78, 67.62, 68.42, 69.19, 69.95, 70.71, 71.45, 72.17, 72.83, 73.49, 74.14, 74.73, 75.3, 75.86, 76.41, 76.96, 77.5, 78.04, 78.57, 79.08, 79.6, 80.1, 80.6, 81.08, 81.5, 81.92, 82.32, 82.72, 83.09, 83.46, 83.83, 84.19, 84.52, 84.86, 85.19, 85.48, 85.75, 86.02, 86.28, 86.54, 86.8, 87.04, 87.28, 87.52, 87.76, 87.99, 88.21, 88.44, 88.66, 88.89, 89.1, 89.31, 89.52, 89.71, 89.9, 90.1, 90.29, 90.48, 90.66, 90.84, 91.01, 91.19, 91.35, 91.51, 91.67, 91.84, 92.0, 92.14, 92.29],
+        borderColor: '#1d9bf0',
+        backgroundColor: 'transparent',
+        pointRadius: 0,
+        borderWidth: 2.5,
+        tension: 0.05,
+        yAxisID: 'y1',
+      },
+    ],
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color: '#d0d8e8', padding: 20 } },
+      tooltip: {
+        backgroundColor: '#1a1d27',
+        borderColor: '#2a2d3a',
+        borderWidth: 1,
+        titleColor: '#fff',
+        bodyColor: '#d0d8e8',
+      },
+    },
+    scales: {
+      x: {
+        ticks: { color: '#556677', maxTicksLimit: 20 },
+        grid:  { color: '#1e2130' },
+      },
+      y: {
+        position: 'left',
+        ticks: { color: '#f91880' },
+        grid:  { color: '#1e2130' },
+        title: { display: true, text: '❤️ Likes', color: '#f91880' },
+      },
+      y1: {
+        position: 'right',
+        min: 0,
+        max: 100,
+        ticks: { color: '#1d9bf0', callback: v => v + '%' },
+        grid:  { drawOnChartArea: false },
+        title: { display: true, text: 'Cumulative %', color: '#1d9bf0' },
+      },
+    },
+  },
+});
+
+// Insight badges
+const box = document.getElementById('insights');
+for (const [pct, idx] of Object.entries(marks)) {
+  const d = document.createElement('div');
+  d.className = 'badge';
+  d.innerHTML = `<span>${idx + 1}</span> tweets capture <span>${pct}%</span> of all likes`;
+  box.appendChild(d);
+}
+</script>
+</body>
+</html>
